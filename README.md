@@ -21,8 +21,8 @@ Reinforcement learning agent had competition with learnt weight against random p
 
 # Plots
 
-![result1!](/plots/myplot10.jpg "sdf")
-![result2!](/plots/myplot12.jpg "sdf")
-![result3!](/plots/myplot13.jpg "sdf")
-![result4!](/plots/myplot14.jpg "sdf")
+![result1!](/plots/myplot10.jpg "first")
+![result2!](/plots/myplot12.jpg "second")
+![result3!](/plots/myplot13.jpg "third")
+![result4!](/plots/myplot14.jpg "fourth")
 
