@@ -24,22 +24,25 @@ class RandomPlayer(quarto.Player):
         return random.randint(0, 3), random.randint(0, 3)
 
 def main():
-    game = quarto.Quarto()
-    playerRL = quarto.Player(game, True)
-    playerR = RandomPlayer(game, True)
-    game.set_players((playerRL, playerR))
-    game.getAvailablePieces()
-    game.getFreePlaces()
-    placeReward, pieceReward = game.learnModelParameters(copy.deepcopy(game.availablePieces))
+    # game = quarto.Quarto()
+    # playerRL = quarto.Player(game, True)
+    # playerR = RandomPlayer(game, True)
+    # game.set_players((playerRL, playerR))
+    # game.getAvailablePieces()
+    # game.getFreePlaces()
+    # placeReward, pieceReward = game.learnModelParameters(copy.deepcopy(game.availablePieces))
     # save("weightOfPlaceFinalExam.npy", placeReward)
     # save("weightOfPieceFinalExam.npy", pieceReward)
 
-    # pieceReward = numpy.load('weightOfPieceFinalExam.npy', allow_pickle=True)
-    # pieceReward = dict(enumerate(pieceReward.flatten(), 1))
-    # pieceReward = pieceReward[1]
-    # placeReward = numpy.load('weightOfPlaceFinalExam.npy', allow_pickle=True)
-    # placeReward = dict(enumerate(placeReward.flatten(), 1))
-    # placeReward = placeReward[1]
+    pieceReward = numpy.load('weightOfPieceFinal.npy', allow_pickle=True)
+    pieceReward = dict(enumerate(pieceReward.flatten(), 1))
+    pieceReward = pieceReward[1]
+    placeReward = numpy.load('weightOfPlaceFinal.npy', allow_pickle=True)
+    placeReward = dict(enumerate(placeReward.flatten(), 1))
+    placeReward = placeReward[1]
+
+    print(pieceReward)
+    print(placeReward)
 
     # -----------------------------------------------------/\ Battle Field /\-----------------------------------------------
     rounds = 1000
