@@ -5,45 +5,88 @@ import logging
 import argparse
 import random
 import quarto
+import numpy
+from numpy import save
+import matplotlib.pyplot as plot
+import copy
 
 
 class RandomPlayer(quarto.Player):
     """Random player"""
 
-    def __init__(self, quarto: quarto.Quarto) -> None:
-        super().__init__(quarto)
+    def __init__(self, quarto: quarto.Quarto, learningPhase) -> None:
+        super().__init__(quarto,learningPhase)
 
     def choose_piece(self) -> int:
-        retV=random.randint(0, 15)
-        return retV
+        return random.randint(0, 15)
 
     def place_piece(self) -> tuple[int, int]:
-        # pi = self.quarto.selected_piece_index
         return random.randint(0, 3), random.randint(0, 3)
 
-
-
-
 def main():
-    # here start learning the parameteres of LR
     game = quarto.Quarto()
-    playerRL = quarto.Player(game)
-    playerR = RandomPlayer(game)
-    # place = playerLR.place_piece()
-    # print(f"next {place}")
-    # playerLR.updateMovesHistory(place)
-    # params = game.learnModelParameters()
+    playerRL = quarto.Player(game, True)
+    playerR = RandomPlayer(game, True)
     game.set_players((playerRL, playerR))
     game.getAvailablePieces()
     game.getFreePlaces()
-    placeReward, pieceReward = game.learnModelParameters(game.availablePieces, game.board, True)
-    print(placeReward)
-    print(pieceReward)
+    placeReward, pieceReward = game.learnModelParameters(copy.deepcopy(game.availablePieces))
+    # save("weightOfPlaceFinalExam.npy", placeReward)
+    # save("weightOfPieceFinalExam.npy", pieceReward)
 
-    # # start real game with lernt parameters
-    # game.set_players((RandomPlayer(game), RandomPlayer(game)))
-    # winner = game.run()
-    # logging.warning(f"main: Winner: player {winner}")
+    # pieceReward = numpy.load('weightOfPieceFinalExam.npy', allow_pickle=True)
+    # pieceReward = dict(enumerate(pieceReward.flatten(), 1))
+    # pieceReward = pieceReward[1]
+    # placeReward = numpy.load('weightOfPlaceFinalExam.npy', allow_pickle=True)
+    # placeReward = dict(enumerate(placeReward.flatten(), 1))
+    # placeReward = placeReward[1]
+
+    # -----------------------------------------------------/\ Battle Field /\-----------------------------------------------
+    rounds = 1000
+    runIndex = 10
+    RlProportion = []
+    Randomproportion = []
+    valueX = []
+
+    for j in range(runIndex):
+        RL = 0
+        rand = 0
+        draw = 0
+        for i in range(rounds):
+            battleField = quarto.Quarto()
+            agentRL = quarto.Player(battleField, False)
+            agentRandom = RandomPlayer(battleField, False)
+            agentRL.gainPiece = pieceReward
+            agentRL.gainPlace = placeReward
+            battleField.set_players((agentRL, agentRandom))
+            winner = battleField.run()
+            if winner == 0:
+                RL += 1
+            elif winner == 1:
+                rand += 1
+            else:
+                draw += 1
+        valueX.append(j)
+        Proportion = RL / rounds
+        RlProportion.append(Proportion)
+        Randomproportion.append(1 - Proportion)
+        # logging.warning(f"main: Winner: player {winner}")
+        print(f"RL rate ={RL / rounds} and randon rate = {rand / rounds}")
+
+    # print(f"RL rate ={RL/rounds} and randon rate = {rand/rounds}")
+    # plot.plot(valueX, RlProportion)
+    plot.semilogy(valueX, RlProportion, "b")
+    plot.axhline(y=0.5, color='r', linestyle='--')
+    # plot.semilogy(valueX, Randomproportion, "y")
+
+    plot.xlim([-1.0, runIndex])
+    plot.ylim([0, 1])
+    plot.title("Precentage Of RL Agent Wins")
+    plot.legend(["RL agent", "Mean"])
+    plot.xlabel("Runs")
+    plot.ylabel(f"{rounds}-Rounds")
+
+    plot.show()
 
 
 if __name__ == '__main__':
