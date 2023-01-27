@@ -982,8 +982,7 @@ class Quarto(object):
                     self.__players[0].moveHistory = []
                     self.__players[0].pieceHistory = []
 
-            #     do not forget to reinitialize board
-            #  return lernt weights
+
             print(f"RL wins: {agentRL} and Random wins: {agentRandom} and Draw is: {draw}, ")
             return self.__players[0].gainPlace, self.__players[0].gainPiece
 

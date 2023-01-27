@@ -70,15 +70,10 @@ def main():
         Proportion = RL / rounds
         RlProportion.append(Proportion)
         Randomproportion.append(1 - Proportion)
-        # logging.warning(f"main: Winner: player {winner}")
         print(f"RL rate ={RL / rounds} and randon rate = {rand / rounds}")
 
-    # print(f"RL rate ={RL/rounds} and randon rate = {rand/rounds}")
-    # plot.plot(valueX, RlProportion)
     plot.semilogy(valueX, RlProportion, "b")
     plot.axhline(y=0.5, color='r', linestyle='--')
-    # plot.semilogy(valueX, Randomproportion, "y")
-
     plot.xlim([-1.0, runIndex])
     plot.ylim([0, 1])
     plot.title("Precentage Of RL Agent Wins")
